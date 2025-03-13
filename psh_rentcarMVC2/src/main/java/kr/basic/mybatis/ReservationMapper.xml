@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+  
+  
+<mapper namespace="kr.basic.mybatis.ReservaionMapper">
+
+
+<resultMap id="joinCarView" type="kr.basic.vo.JoinCarView" >
+        <!-- Define mappings for JoinCarView properties -->
+	   	<result column="name" property="name"/>	
+	   	<result column="price" property="price"/>	
+	   	<result column="img" property="img"/>
+        <result property="qty" column="qty"/>
+        <result property="dday" column="dday"/>
+        <result property="rday" column="rday"/>
+        <result property="usein" column="usein"/>
+        <result property="usewifi" column="usewifi"/>
+        <result property="useseat" column="useseat"/>
+        <result property="usenavi" column="usenavi"/>
+        <result column="reserve_seq" property="reserveSeq"/>	
+
+    </resultMap>
+
+
+<insert id="addCarReservation" parameterType="reservation" useGeneratedKeys="true" keyProperty="reserve_seq">
+        INSERT INTO reservation (num,userid,qty,dday,rday,usein,usewifi,usenavi,useseat) 
+        VALUES (#{num},#{userid},#{qty},#{dday},#{rday},#{usein},#{usewifi},#{usenavi},#{useseat})
+   </insert>
+   <select id="getReservationList" parameterType="Integer" resultMap="joinCarView">
+   
+		select rc.name,rc.price,rc.img,r.qty,r.dday,r.rday,r.usein,r.usewifi,r.useseat,r.usenavi,r.reserve_seq
+		from reservation r
+		inner join user u
+		on r.userid = u.userid
+		inner join rentcar rc
+		on rc.num = r.num
+		where u.num=#{log};
+	
+	</select>
+	<delete id="deleteReservation" parameterType="Integer">
+		delete from reservation where reserve_seq = #{reserveSeq};
+	</delete>
+</mapper>
+
